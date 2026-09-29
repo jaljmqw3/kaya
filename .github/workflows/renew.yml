@@ -1,0 +1,45 @@
+name: Katabump Auto Renew
+
+on:
+  schedule:
+    # هر ۳ روز ساعت ۱۲ ظهر (UTC)
+    - cron: '0 12 */3 * *'
+  workflow_dispatch: # اجرای دستی
+
+jobs:
+  renew-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: دریافت کدها
+        uses: actions/checkout@v4
+
+      - name: نصب پایتون
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: نصب Playwright
+        run: |
+          pip install playwright
+          playwright install chromium
+          playwright install-deps
+
+      - name: اجرای تمدید
+        env:
+          KATABUMP_EMAIL: ${{ secrets.KATABUMP_EMAIL }}
+          KATABUMP_PASSWORD: ${{ secrets.KATABUMP_PASSWORD }}
+          SERVER_ID: ${{ secrets.SERVER_ID }}
+        run: python renew.py
+
+      - name: آپلود اسکرین‌شات (در صورت خطا یا موفقیت)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: |
+            success_screenshot.png
+            error_screenshot.png
+            no_renew_button.png
+          if-no-files-found: ignore
+          retention-days: 7
