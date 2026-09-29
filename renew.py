@@ -43,7 +43,7 @@ def main():
         try:
             # ─── لاگین ───
             print("🔄 در حال ورود به Katabump...")
-            page.goto(f"{BASE_URL}/auth/login", wait_until="networkidle", timeout=60000)
+            page.goto(f"{BASE_URL}/auth/login", wait_until="domcontentloaded", timeout=60000)
             page.wait_for_timeout(3000)
 
             # فرم لاگین
