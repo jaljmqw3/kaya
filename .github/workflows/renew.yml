@@ -32,14 +32,17 @@ jobs:
           SERVER_ID: ${{ secrets.SERVER_ID }}
         run: python renew.py
 
-      - name: آپلود اسکرین‌شات (در صورت خطا یا موفقیت)
+      - name: آپلود اسکرین‌شات
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: screenshots
           path: |
+            after_login.png
+            server_page.png
             success_screenshot.png
+            final_screenshot.png
             error_screenshot.png
-            no_renew_button.png
+            error_login_form.png
           if-no-files-found: ignore
           retention-days: 7
